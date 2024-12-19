@@ -1,7 +1,7 @@
 // Función para verificar si el usuario está logueado
 async function verificarSesion() {
     try {
-        const respuesta = await fetch('/auth/usuario');
+        const respuesta = await fetch('https://panaderiafulll.onrender.com/auth/usuario');
         if (!respuesta.ok) throw new Error('Usuario no autenticado.');
         return true;
     } catch {
@@ -15,7 +15,7 @@ async function cargarHistorial() {
     const tablaBody = document.getElementById('tabla-body'); // ID corregido
 
     try {
-        const respuesta = await fetch('/tickets/compras'); // URL corregida
+        const respuesta = await fetch('https://panaderiafulll.onrender.com/tickets/compras'); // URL corregida
         if (!respuesta.ok) throw new Error('Error al obtener el historial de compras.');
 
         const historial = await respuesta.json();
