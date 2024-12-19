@@ -16,7 +16,7 @@ function ensureAuthenticated(req, res, next) {
 router.get('/get', ensureAuthenticated, async (req, res) => {
     try {
         const userId = req.session.user.id_usuario; // Accede al usuario desde la sesión
-        const [result] = await db.query('SELECT fondos FROM Usuarios WHERE id_usuario = ?', [userId]);
+        const [result] = await db.query('SELECT fondos FROM usuarios WHERE id_usuario = ?', [userId]);
 
         if (result.length > 0) {
             const fondos = parseFloat(result[0].fondos); // Convertir a número
@@ -69,7 +69,7 @@ router.post('/add', ensureAuthenticated, async (req, res) => {
 
         // Actualizar fondos en la base de datos
         const [result] = await db.query(
-            'UPDATE Usuarios SET fondos = fondos + ? WHERE id_usuario = ?',
+            'UPDATE usuarios SET fondos = fondos + ? WHERE id_usuario = ?',
             [parsedAmount, userId]
         );
 
