@@ -33,7 +33,7 @@ router.post('/agregar', ensureAuthenticated, async (req, res) => {
 
         // Verificar si el producto ya está en el carrito del usuario
         const [productoExistente] = await db.query(
-            'SELECT * FROM Carrito WHERE id_usuario = ? AND id_producto = ?',
+            'SELECT * FROM carrito WHERE id_usuario = ? AND id_producto = ?',
             [idUsuario, idProducto]
         );
 
