@@ -110,6 +110,7 @@ router.delete('/quitar', ensureAuthenticated, async (req, res) => {
     }
 });
 
+// Ruta para realizar la compra
 router.post('/comprar', ensureAuthenticated, async (req, res) => {
     try {
         const idUsuario = req.session.user.id_usuario;
@@ -140,7 +141,6 @@ router.post('/comprar', ensureAuthenticated, async (req, res) => {
                 });
             }
         }
-        
 
         // Calcular el total de la compra
         const totalCompra = carrito.reduce((total, producto) => {
@@ -200,51 +200,7 @@ router.post('/comprar', ensureAuthenticated, async (req, res) => {
             }
         }
 
-        try {
-            const idUsuario = req.session.user.id_usuario;
-        
-            console.log('Iniciando compra para usuario:', idUsuario);
-        
-            // Obtener los productos del carrito
-            const [carrito] = await db.query(`
-                SELECT 
-                    p.id_producto, 
-                    p.nombre_producto, 
-                    p.precio AS precio_unitario, 
-                    c.cantidad, 
-                    p.stock 
-                FROM carrito c 
-                JOIN productos p ON c.id_producto = p.id_producto 
-                WHERE c.id_usuario = ?
-            `, [idUsuario]);
-        
-            console.log('Productos en el carrito:', carrito);
-        
-            if (carrito.length === 0) {
-                console.log('El carrito está vacío.');
-                return res.status(400).json({ message: 'El carrito está vacío.' });
-            }
-        
-            // Verificar que todos los productos tienen suficiente stock
-            for (const producto of carrito) {
-                if (producto.cantidad > producto.stock) {
-                    console.log(`Stock insuficiente para el producto: ${producto.nombre_producto}`);
-                    return res.status(400).json({
-                        message: `Stock insuficiente para el producto: ${producto.nombre_producto}. Stock disponible: ${producto.stock}.`
-                    });
-                }
-            }
-        
-            console.log('Todos los productos tienen stock suficiente.');
-        
-            // Continuar con el flujo normal...
-        } catch (err) {
-            console.error('Error en la compra:', err.message, err.stack);
-            res.status(500).json({ message: 'Error al procesar la compra.' });
-        }
-        
-
-        // Vaciar carrito
+        // Vaciar carrito después de la compra
         await db.query('DELETE FROM carrito WHERE id_usuario = ?', [idUsuario]);
 
         res.status(200).json({ message: 'Compra realizada con éxito.' });
@@ -253,6 +209,5 @@ router.post('/comprar', ensureAuthenticated, async (req, res) => {
         res.status(500).json({ message: 'Error al procesar la compra.' });
     }
 });
-
 
 module.exports = router;
