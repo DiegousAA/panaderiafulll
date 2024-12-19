@@ -42,13 +42,13 @@ router.post('/agregar', ensureAuthenticated, async (req, res) => {
         if (productoExistente.length > 0) {
             // Si el producto ya está en el carrito, actualizar la cantidad
             await db.query(
-                'UPDATE Carrito SET cantidad = cantidad + ? WHERE id_usuario = ? AND id_producto = ?',
+                'UPDATE carrito SET cantidad = cantidad + ? WHERE id_usuario = ? AND id_producto = ?',
                 [cantidad, idUsuario, idProducto]
             );
         } else {
             // Si el producto no está en el carrito, agregarlo
             await db.query(
-                'INSERT INTO Carrito (id_usuario, id_producto, cantidad) VALUES (?, ?, ?)',
+                'INSERT INTO carrito (id_usuario, id_producto, cantidad) VALUES (?, ?, ?)',
                 [idUsuario, idProducto, cantidad]
             );
         }
@@ -72,8 +72,8 @@ router.get('/listar', ensureAuthenticated, async (req, res) => {
                 p.precio AS precio_unitario, 
                 c.cantidad, 
                 p.imagen_url 
-             FROM Carrito c 
-             JOIN Productos p ON c.id_producto = p.id_producto 
+             FROM carrito c 
+             JOIN productos p ON c.id_producto = p.id_producto 
              WHERE c.id_usuario = ?`,
             [idUsuario]
         );
@@ -99,7 +99,7 @@ router.delete('/quitar', ensureAuthenticated, async (req, res) => {
         const idUsuario = req.session.user.id_usuario;
 
         await db.query(
-            'DELETE FROM Carrito WHERE id_usuario = ? AND id_producto = ?',
+            'DELETE FROM carrito WHERE id_usuario = ? AND id_producto = ?',
             [idUsuario, idProducto]
         );
 
@@ -122,8 +122,8 @@ router.post('/comprar', ensureAuthenticated, async (req, res) => {
                 p.precio AS precio_unitario, 
                 c.cantidad, 
                 p.stock 
-             FROM Carrito c 
-             JOIN Productos p ON c.id_producto = p.id_producto 
+             FROM carrito c 
+             JOIN productos p ON c.id_producto = p.id_producto 
              WHERE c.id_usuario = ?`,
             [idUsuario]
         );
@@ -148,7 +148,7 @@ router.post('/comprar', ensureAuthenticated, async (req, res) => {
         }, 0);
 
         // Obtener los fondos del usuario
-        const [usuario] = await db.query('SELECT fondos FROM Usuarios WHERE id_usuario = ?', [idUsuario]);
+        const [usuario] = await db.query('SELECT fondos FROM usuarios WHERE id_usuario = ?', [idUsuario]);
 
         if (usuario.length === 0) {
             return res.status(404).json({ message: 'Usuario no encontrado.' });
@@ -161,7 +161,7 @@ router.post('/comprar', ensureAuthenticated, async (req, res) => {
         }
 
         // Restar el total de la compra de los fondos del usuario
-        await db.query('UPDATE Usuarios SET fondos = fondos - ? WHERE id_usuario = ?', [totalCompra, idUsuario]);
+        await db.query('UPDATE usuarios SET fondos = fondos - ? WHERE id_usuario = ?', [totalCompra, idUsuario]);
 
         // Insertar la compra en la tabla de tickets
         const [result] = await db.query(
@@ -174,26 +174,26 @@ router.post('/comprar', ensureAuthenticated, async (req, res) => {
         // Insertar los detalles de los productos comprados y actualizar el stock
         for (const producto of carrito) {
             await db.query(
-                'INSERT INTO DetalleProductos (id_ticket, id_producto, cantidad, precio_unitario, subtotal) VALUES (?, ?, ?, ?, ?)',
+                'INSERT INTO detalleproductos (id_ticket, id_producto, cantidad, precio_unitario, subtotal) VALUES (?, ?, ?, ?, ?)',
                 [idTicket, producto.id_producto, producto.cantidad, producto.precio_unitario, producto.cantidad * producto.precio_unitario]
             );
 
             // Actualizar el stock del producto
             const [updateResult] = await db.query(
-                'UPDATE Productos SET stock = stock - ? WHERE id_producto = ?',
+                'UPDATE productos SET stock = stock - ? WHERE id_producto = ?',
                 [producto.cantidad, producto.id_producto]
             );
 
             // Eliminar productos con stock igual a 0
             if (updateResult.affectedRows > 0) {
                 const [stockCheck] = await db.query(
-                    'SELECT stock FROM Productos WHERE id_producto = ?',
+                    'SELECT stock FROM productos WHERE id_producto = ?',
                     [producto.id_producto]
                 );
 
                 if (stockCheck.length > 0 && stockCheck[0].stock === 0) {
                     await db.query(
-                        'DELETE FROM Productos WHERE id_producto = ?',
+                        'DELETE FROM productos WHERE id_producto = ?',
                         [producto.id_producto]
                     );
                 }
@@ -213,8 +213,8 @@ router.post('/comprar', ensureAuthenticated, async (req, res) => {
                     p.precio AS precio_unitario, 
                     c.cantidad, 
                     p.stock 
-                FROM Carrito c 
-                JOIN Productos p ON c.id_producto = p.id_producto 
+                FROM carrito c 
+                JOIN productos p ON c.id_producto = p.id_producto 
                 WHERE c.id_usuario = ?
             `, [idUsuario]);
         
@@ -245,7 +245,7 @@ router.post('/comprar', ensureAuthenticated, async (req, res) => {
         
 
         // Vaciar carrito
-        await db.query('DELETE FROM Carrito WHERE id_usuario = ?', [idUsuario]);
+        await db.query('DELETE FROM carrito WHERE id_usuario = ?', [idUsuario]);
 
         res.status(200).json({ message: 'Compra realizada con éxito.' });
     } catch (err) {
