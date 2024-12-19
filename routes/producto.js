@@ -12,7 +12,7 @@ router.post("/crear", async (req, res) => {
 
   try {
     const [result] = await db.query(
-      "INSERT INTO Productos (nombre_producto, precio, stock, imagen_url) VALUES (?, ?, ?, ?)",
+      "INSERT INTO productos (nombre_producto, precio, stock, imagen_url) VALUES (?, ?, ?, ?)",
       [productName, productPrice, productStock, productImage || null]
     );
     res.status(201).json({ message: "Producto creado exitosamente.", id: result.insertId });
