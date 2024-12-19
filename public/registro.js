@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('regPassword').value;
             const confirmPassword = document.getElementById('regConfirmPassword').value;
 
-            const response = await fetch('/auth/register', {
+            const response = await fetch('https://panaderiafulll.onrender.com/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, email, password, confirmPassword }),
