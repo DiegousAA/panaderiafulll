@@ -32,7 +32,7 @@ router.post("/actualizar", async (req, res) => {
 
   try {
       const [result] = await db.query(
-          `UPDATE Productos 
+          `UPDATE productos 
            SET 
                nombre_producto = COALESCE(?, nombre_producto), 
                precio = COALESCE(?, precio), 
@@ -69,7 +69,7 @@ router.post("/eliminar", async (req, res) => {
   }
 
   try {
-    const [result] = await db.query("DELETE FROM Productos WHERE id_producto = ?", [productId]);
+    const [result] = await db.query("DELETE FROM productos WHERE id_producto = ?", [productId]);
 
     if (result.affectedRows === 0) {
       return res.status(404).send("Producto no encontrado.");
@@ -85,7 +85,7 @@ router.post("/eliminar", async (req, res) => {
 // Listar productos
 router.get("/listar", async (req, res) => {
   try {
-    const [products] = await db.query("SELECT * FROM Productos");
+    const [products] = await db.query("SELECT * FROM productos");
     res.status(200).json(products);
   } catch (error) {
     console.error("Error al obtener productos:", error);
