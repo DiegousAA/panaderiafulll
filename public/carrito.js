@@ -68,7 +68,7 @@ async function cargarCarrito() {
 // Función para comprar los productos del carrito
 async function comprarProductos() {
     try {
-        const respuesta = await fetch('https://panaderiafulll.onrender.com/comprar', {
+        const respuesta = await fetch('/comprar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
