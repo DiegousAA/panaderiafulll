@@ -8,7 +8,7 @@ document.getElementById('formAgregarProducto').addEventListener('submit', async 
   const productImage = document.getElementById('productImageAgregar').value;
 
   try {
-    const response = await fetch('/producto/crear', {
+    const response = await fetch('https://panaderiafulll.onrender.com/producto/crear', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ productName, productPrice, productStock, productImage }),
@@ -62,7 +62,7 @@ document.getElementById('formEliminarProducto').addEventListener('submit', async
   const productId = document.getElementById('productIdEliminar').value;
 
   try {
-    const response = await fetch(`/producto/eliminar`, {
+    const response = await fetch(`https://panaderiafulll.onrender.com/producto/eliminar`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ productId }),
