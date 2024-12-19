@@ -22,7 +22,7 @@ router.post('/consultar', verificarAutenticacion, async (req, res) => {
     try {
         const [historial] = await db.query(
             `SELECT id_ticket, fecha_compra, total_a_pagar
-             FROM Tickets
+             FROM tickets
              WHERE id_usuario = ?
              ORDER BY fecha_compra DESC`,
             [idUsuario]
