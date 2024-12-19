@@ -165,7 +165,7 @@ router.post('/comprar', ensureAuthenticated, async (req, res) => {
 
         // Insertar la compra en la tabla de tickets
         const [result] = await db.query(
-            'INSERT INTO Tickets (id_usuario, total_a_pagar) VALUES (?, ?)',
+            'INSERT INTO tickets (id_usuario, total_a_pagar) VALUES (?, ?)',
             [idUsuario, totalCompra]
         );
 
