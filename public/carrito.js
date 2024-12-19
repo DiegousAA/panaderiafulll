@@ -1,7 +1,7 @@
 // Función para verificar si el usuario está logueado
 async function verificarSesion() {
   try {
-    const respuesta = await fetch('/auth/usuario');
+    const respuesta = await fetch('https://panaderiafulll.onrender.com/auth/usuario');
     if (!respuesta.ok) throw new Error('Usuario no autenticado.');
     return true;
   } catch {
@@ -16,7 +16,7 @@ async function cargarCarrito() {
   const botonComprar = document.getElementById('comprar-btn');
 
   try {
-    const respuesta = await fetch('/carrito/listar');
+    const respuesta = await fetch('https://panaderiafulll.onrender.com/carrito/listar');
     if (!respuesta.ok) throw new Error('Error al obtener los productos del carrito.');
 
     const carrito = await respuesta.json();
@@ -68,7 +68,7 @@ async function cargarCarrito() {
 // Función para comprar los productos del carrito
 async function comprarProductos() {
     try {
-        const respuesta = await fetch('/carrito/comprar', {
+        const respuesta = await fetch('https://panaderiafulll.onrender.com/carrito/comprar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ async function comprarProductos() {
 // Función para quitar un producto del carrito
 async function quitarDelCarrito(idProducto) {
   try {
-    const respuesta = await fetch('/carrito/quitar', {
+    const respuesta = await fetch('https://panaderiafulll.onrender.com/carrito/quitar', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ async function quitarDelCarrito(idProducto) {
 // Función para aumentar la cantidad de un producto en el carrito
 async function aumentarCantidad(idProducto) {
   try {
-    const respuesta = await fetch('/carrito/agregar', {
+    const respuesta = await fetch('https://panaderiafulll.onrender.com/carrito/agregar', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
