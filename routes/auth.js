@@ -27,7 +27,7 @@ router.post('/login', async (req, res) => {
     try {
         // Consultar el usuario en la base de datos
         const [results] = await db.query(
-            'SELECT * FROM Usuarios WHERE nombre_usuario = ?',
+            'SELECT * FROM usuarios WHERE nombre_usuario = ?',
             [username]
         );
 
@@ -112,7 +112,7 @@ router.post('/register', async (req, res) => {
     try {
         // Verificar si el usuario o el correo ya existen
         const [existingUser] = await db.query(
-            'SELECT * FROM Usuarios WHERE nombre_usuario = ? OR correo = ?',
+            'SELECT * FROM usuarios WHERE nombre_usuario = ? OR correo = ?',
             [username, email]
         );
 
@@ -125,7 +125,7 @@ router.post('/register', async (req, res) => {
 
         // Insertar el nuevo usuario en la base de datos
         await db.query(
-            'INSERT INTO Usuarios (nombre_usuario, correo, contrasena, rol, fondos) VALUES (?, ?, ?, ?, ?)',
+            'INSERT INTO usuarios (nombre_usuario, correo, contrasena, rol, fondos) VALUES (?, ?, ?, ?, ?)',
             [username, email, hashedPassword, 'usuario', 0.00]
         );
 
