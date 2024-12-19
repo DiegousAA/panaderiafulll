@@ -1,7 +1,7 @@
 // Verificar si el usuario está logueado
 async function verificarSesion() {
   try {
-    const respuesta = await fetch('/auth/usuario');
+    const respuesta = await fetch('https://panaderiafulll.onrender.com/auth/usuario');
     if (!respuesta.ok) throw new Error('Usuario no autenticado.');
     return true;
   } catch {
@@ -18,7 +18,7 @@ async function cargarProductos() {
   contenedorProductos.innerHTML = '<p>Cargando productos...</p>';
 
   try {
-    const respuesta = await fetch('/producto/listar');
+    const respuesta = await fetch('https://panaderiafulll.onrender.com/producto/listar');
     if (!respuesta.ok) throw new Error('Error al obtener los productos.');
 
     const productos = await respuesta.json();
@@ -62,7 +62,7 @@ async function agregarAlCarrito(idProducto) {
       return;
     }
 
-    const respuesta = await fetch('/carrito/agregar', {
+    const respuesta = await fetch('https://panaderiafulll.onrender.com/carrito/agregar', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
