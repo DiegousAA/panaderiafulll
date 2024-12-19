@@ -1,7 +1,7 @@
 // Obtener y mostrar los fondos del usuario
 async function obtenerFondos() {
     try {
-        const response = await fetch('/fondos/get', { // Cambiar a /fondos/get
+        const response = await fetch('https://panaderiafulll.onrender.com/fondos/get', { // Cambiar a /fondos/get
             method: 'GET',
             credentials: 'include',
         });
@@ -43,7 +43,7 @@ document.getElementById('fondos-form').addEventListener('submit', async function
     }
 
     try {
-        const response = await fetch('/fondos/add', { // Cambiar a /fondos/add
+        const response = await fetch('https://panaderiafulll.onrender.com/fondos/add', { // Cambiar a /fondos/add
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
